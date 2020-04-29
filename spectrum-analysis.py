@@ -40,11 +40,12 @@ def getTxtFileArray(filename, n):
         except ValueError:
             continue
 
-
     return arr
+
 
 def xryToTxt(filename):
     pass
+
 
 print(' '.join(str(e) for e in [1, 2, 3]))
 
