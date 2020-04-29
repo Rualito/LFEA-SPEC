@@ -4,3 +4,5 @@ def plotFile(filename):
     pass
 
 
+def xryToTxt(filename):
+    pass
