@@ -1,7 +1,7 @@
 import PyGnuplot as gp
 import numpy as np
 
-from os import  listdir
+from os import listdir
 from os.path import isfile, join, splitext
 from decimal import Decimal
 
@@ -71,13 +71,16 @@ def xryToTxt(filename):
     fileW.close()
     return True
 
-mainDataDir = "SPEC"
-
 def convertXRYDirToTxt(dir):
     xryNames = [f for f in listdir(dir) if isfile(join(dir, f)) and splitext(join(dir, f))[1]=='.xry']
 
     fullPathNames = [join(dir, name) for name in xryNames]
     [xryToTxt(fullName) for fullName in fullPathNames]
+
+
+def createJoinedDataFile(crystal):
+    # from the file names gets the full data into a single data file, for display and analysis
+    pass
 
 def convertAll():
     convertXRYDirToTxt("SPEC\\2D\\2D data files")
@@ -86,8 +89,10 @@ def convertAll():
     convertXRYDirToTxt("SPEC\\4D\\4D data files")
     convertXRYDirToTxt("SPEC\\5D\\5D data files")
 
-def __main__():
-    convertAll()
+crystalNames = ["NaCl","Al", "Si", "LiF"]
 
+def __main__():
+    # convertAll()
+    pass
 
 __main__()
