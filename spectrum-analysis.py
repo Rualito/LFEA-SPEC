@@ -163,14 +163,43 @@ def printFileParameters(file):
 
 def __main__():
     # convertAll()
+    data = getTxtFileArray("SPEC\\4D\\4D data files\\NaCl_2.txt", 0, True)
+    spec = Spectrum.Spectrum(data)
 
+    spec.setBaseLinePars(-500. / 3, 1800)
+    spec.addGaussianParameters(200, 6.4, 0.1)
+    spec.addGaussianParameters(600, 7.2, 0.1)
+
+
+    spec.fitData(5, 9)
+    pass
+
+def __plotDataExample__():
     data = getTxtFileArray("SPEC\\4D\\4D data files\\NaCl_2.txt", 0, True)
 
     spec = Spectrum.Spectrum(data)
 
-    spec.plotData()
+    spec.plotData(5, 9)
 
-    pass
+
+
+__main__()
+# __plotDataExample__()
+
+
+def __fitExample__():
+
+    gp.c("reset")
+    gp.c("set grid")
+    gp.s([ [1,2,3], [4, 7, 13], [1,1,1]])
+    gp.c("m = 1")
+    gp.c("b = 1")
+    gp.c("f(x) = m*x+b")
+    gp.c("fit f(x) 'tmp.dat' u 1:2:3 yerrors via m,b")
+    gp.c("set xrange [0:4]")
+    gp.c("plot 'tmp.dat' u 1:2:3 w yerrorbars, f(x)")
+
+# __fitExample__()
 
 #
 # crystal = crystalNames[5]
@@ -182,4 +211,3 @@ def __main__():
 #                 if crystal.casefold() in fname.casefold() and splitext(fname)[1] == ".txt"]
 # for i in range(len(crystalFiles)):
 #     print(crystalFilesname[i], printFileParameters(crystalFiles[i]))
-__main__()
