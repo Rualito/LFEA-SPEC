@@ -21,32 +21,42 @@ def plotFile(filename, n):
     gp.s(data, tempname)
     gp.c("plot 'tempfile.dat' u 1:2 w lp")
 
-def getTxtFileArray(filename, n=0):
+def getTxtFileArray(filename, n=0, concat=False):
     file = open(filename, "r")
 
     lines = file.readlines()
     file.close()
 
     arr = []
-    if n ==0:
-        n=len(lines[1].split())
+    if n == 0:
+        n = len(lines[1].split())
 
-    for i in range(n):
-        arr.append([])
+    if not concat:
+        for i in range(n):
+            arr.append([])
+    else:
+        arr = [[], []]
 
     for i in range(len(lines)):
         vals = []
         try:
             strVal = lines[i].split()
 
-            for str in strVal:
+            for str0 in strVal:
                 # converting all the strings into values, with the try checking for any incompatible value
-                vals.append(float(str))
+                vals.append(float(str0))
 
-            for j in range(n):
-                # loading the values onto the array
-                arr[j].append(vals[j])
+            if concat:
+                arr[0].append(vals[0])
+                arr[1].append(vals[1])
+                for j in range(1, n):
+                    arr[1][-1] += vals[j]
+            else:
+                for j in range(n):
+                    # loading the values onto the array
+                    arr[j].append(vals[j])
         except ValueError:
+            print("Getting ValueError on entry " + str(i))
             continue
 
     return arr
@@ -125,8 +135,6 @@ def getDataArray(dir:str, crystal:str):
 
     return data1
 
-
-
 def convertAll():
     convertXRYDirToTxt("SPEC\\2D\\2D data files")
     convertXRYDirToTxt("SPEC\\3D\\3D data files\\1seccao")
@@ -134,18 +142,35 @@ def convertAll():
     convertXRYDirToTxt("SPEC\\4D\\4D data files")
     convertXRYDirToTxt("SPEC\\5D\\5D data files")
 
-crystalNames = ["NaCl","Al", "Si", "LiF"]
+crystalNames = ["NaCl","Al", "Si", "LiF", "direto", "misterio"]
+
+def printFileParameters(file):
+    arr = getTxtFileArray(file, 0, True)
+
+    min0 = arr[0][0]
+    max0 = arr[0][-1]
+    step = arr[0][1]-min0
+
+    return "\t"+str(min0) + "\t" + str(max0) + "\t" + "%0.2f"%step
 
 def __main__():
     # convertAll()
-    dict0 = {1:2, 3:4}
 
-    print(list(dict0.items())[0][1])
-    data = getDataArray("SPEC\\2D\\2D data files", "NaCl")
-    gp.s(data)
+    # data = getDataArray("SPEC\\2D\\2D data files", "NaCl")
+    # gp.s(data)
 
-    gp.c("plot 'tmp.dat' u 1:2")
+    # gp.c("plot 'tmp.dat' u 1:2")
 
     pass
 
-__main__()
+
+crystal = crystalNames[5]
+directory = "SPEC\\4D\\4D data files"
+crystalFiles = [join(directory, fname) for fname in listdir(directory)
+                if crystal.casefold() in fname.casefold() and splitext(fname)[1] == ".txt"]
+
+crystalFilesname = [fname for fname in listdir(directory)
+                if crystal.casefold() in fname.casefold() and splitext(fname)[1] == ".txt"]
+for i in range(len(crystalFiles)):
+    print(crystalFilesname[i], printFileParameters(crystalFiles[i]))
+# __main__()
