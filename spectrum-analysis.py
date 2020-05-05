@@ -1,5 +1,6 @@
 import PyGnuplot as gp
 import numpy as np
+import Spectrum
 
 from os import listdir
 from os.path import isfile, join, splitext
@@ -20,6 +21,7 @@ def plotFile(filename, n):
 
     gp.s(data, tempname)
     gp.c("plot 'tempfile.dat' u 1:2 w lp")
+
 
 def getTxtFileArray(filename, n=0, concat=False):
     file = open(filename, "r")
@@ -47,10 +49,16 @@ def getTxtFileArray(filename, n=0, concat=False):
                 vals.append(float(str0))
 
             if concat:
-                arr[0].append(vals[0])
-                arr[1].append(vals[1])
+
+                med = 0
+                cnt = 0
                 for j in range(1, n):
-                    arr[1][-1] += vals[j]
+                    if not isNaN(vals[j]):
+                        med += vals[j]
+                        cnt += 1
+                if cnt != 0:
+                    arr[0].append(vals[0])
+                    arr[1].append(med/cnt)
             else:
                 for j in range(n):
                     # loading the values onto the array
@@ -156,21 +164,22 @@ def printFileParameters(file):
 def __main__():
     # convertAll()
 
-    # data = getDataArray("SPEC\\2D\\2D data files", "NaCl")
-    # gp.s(data)
+    data = getTxtFileArray("SPEC\\4D\\4D data files\\NaCl_2.txt", 0, True)
 
-    # gp.c("plot 'tmp.dat' u 1:2")
+    spec = Spectrum.Spectrum(data)
+
+    spec.plotData()
 
     pass
 
-
-crystal = crystalNames[5]
-directory = "SPEC\\4D\\4D data files"
-crystalFiles = [join(directory, fname) for fname in listdir(directory)
-                if crystal.casefold() in fname.casefold() and splitext(fname)[1] == ".txt"]
-
-crystalFilesname = [fname for fname in listdir(directory)
-                if crystal.casefold() in fname.casefold() and splitext(fname)[1] == ".txt"]
-for i in range(len(crystalFiles)):
-    print(crystalFilesname[i], printFileParameters(crystalFiles[i]))
-# __main__()
+#
+# crystal = crystalNames[5]
+# directory = "SPEC\\4D\\4D data files"
+# crystalFiles = [join(directory, fname) for fname in listdir(directory)
+#                 if crystal.casefold() in fname.casefold() and splitext(fname)[1] == ".txt"]
+#
+# crystalFilesname = [fname for fname in listdir(directory)
+#                 if crystal.casefold() in fname.casefold() and splitext(fname)[1] == ".txt"]
+# for i in range(len(crystalFiles)):
+#     print(crystalFilesname[i], printFileParameters(crystalFiles[i]))
+__main__()
