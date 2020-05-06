@@ -170,16 +170,14 @@ def __main__():
     spec.addGaussianParameters(200, 6.4, 0.1)
     spec.addGaussianParameters(600, 7.2, 0.1)
 
-
-    spec.fitData(5, 9)
-    pass
+    spec.fitData(5.5, 8)
 
 def __plotDataExample__():
     data = getTxtFileArray("SPEC\\4D\\4D data files\\NaCl_2.txt", 0, True)
 
     spec = Spectrum.Spectrum(data)
 
-    spec.plotData(5, 9)
+    spec.plotData(5.5, 8)
 
 
 

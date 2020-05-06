@@ -1,6 +1,6 @@
 import math
 import PyGnuplot as gp
-
+import time
 
 class Spectrum:
 
@@ -37,8 +37,11 @@ class Spectrum:
         self.mpar = m0
         self.bpar = b0
 
-    def fitData(self, xmin: float, xmax: float):
+    def fitData(self, xmin: float, xmax: float, filename=""):
         # fun right here
+
+        fitlog_del = open("fit.log", "w")
+        fitlog_del.close()
 
         arrX = []
         arrY = []
@@ -60,6 +63,7 @@ class Spectrum:
 
         viaStr = "m, b, "
         gaussStr = ""
+        paramNumber = 2
         for i in range(len(self.Apars)):
             gp.c("A%d=%f" % (i, self.Apars[i]))
             gp.c("mu%d=%f" % (i, self.mupars[i]))
@@ -70,12 +74,53 @@ class Spectrum:
                 viaStr += ", "
             gaussStr += "A%d/(sqrt(2*pi)*sig%d) * exp( -0.5*((x-mu%d)/sig%d)**2)"% (i, i, i, i)
             viaStr += "A%d, mu%d, sig%d" % (i, i, i)
+            paramNumber+=3
 
         gp.c("ftot(x)="+gaussStr+"+m*x+b")
         gp.c("fit ftot(x) 'tmp.dat' u 1:2:3 yerrors via " + viaStr)
         gp.c("plot 'tmp.dat' u 1:2:3 w yerrorbars t 'Data', ftot(x)")
 
+        if len(filename) != 0:
+            gp.p(filename)
+
+        time.sleep(0.1)  # needed to create the fit.log file in time
         # then view file fit.log to get parameters
+
+        fitlog = open("fit.log", "r")
+        fileLines = fitlog.readlines()
+        fitlog.close()
+
+        if len(fileLines) == 0:
+            time.sleep(0.3)
+            fitlog = open("fit.log", "r")
+            fileLines = fitlog.readlines()
+            fitlog.close()
+
+        chi2 = 0
+        paramspos = 0
+        paramStr = []
+        paramVal = []
+        paramErr = []
+        for i in range(len(fileLines)):
+            if "(reduced chisquare) = WSSR/ndf" in fileLines[i]:
+                print(fileLines[i].split(" : "))
+                chi2 = float(fileLines[i].split(" : ")[1])
+
+            if "Final set of parameters" in fileLines[i]:
+                paramspos = i
+
+            if paramspos != 0 and paramspos + 1 < i < paramspos + 2 + paramNumber:
+                paramStr.append(fileLines[i].split(" ")[0])
+
+                pars = fileLines[i].split(" = ")[1]
+                paramVal.append(float(pars.split()[0]))
+                paramErr.append(float(pars.split(" +/- ")[1].split()[0]))
+
+        print("chi2: ", chi2)
+        for i in range(len(paramStr)):
+            print(paramStr[i], paramVal[i], paramErr[i])
+
+        return [paramStr, paramVal, paramErr]
 
     def plotData(self, xmin=0, xmax=0):
         gp.c("reset")
