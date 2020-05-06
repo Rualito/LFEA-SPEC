@@ -161,6 +161,25 @@ def printFileParameters(file):
 
     return "\t"+str(min0) + "\t" + str(max0) + "\t" + "%0.2f"%step
 
+crystalFitParameters = {"NaCl": [
+                            {"m": -500./3, "b": 1800, "A": [200, 800], "mu": [6.4, 7.4], "sig": [0.1, 0.1]},
+                            {"m": -500./3, "b": 1800, "A": [10, 20], "mu": [19.5, 22.2], "sig": [0.1, 0.1]},
+                            {"m": -500./3, "b": 1800, "A": [1, 2], "mu": [26.6, 30], "sig": [0.1, 0.1]}],
+                        "Al": [
+                            {"m": -500./3, "b": 1800, "A": [20, 50], "mu": [8.5, 9.9], "sig": [0.2, 0.2]},
+                            {"m": -500./3, "b": 1800, "A": [1, 5], "mu": [18, 20.3], "sig": [0.2, 0.2]},
+                            {"m": -500./3, "b": 1800, "A": [1], "mu": [27], "sig": [0.1]},
+                            {"m": -500./3, "b": 1800, "A": [1], "mu": [31], "sig": [0.1]}],
+                        "Si": [
+                            {"m": -500./3, "b": 1800, "A": [20, 50], "mu": [13.3, 15], "sig": [0.2, 0.2]},
+                            {"m": -500./3, "b": 1800, "A": [5, 5], "mu": [27.5, 31.2], "sig": [0.2, 0.2]},
+                            {"m": -500./3, "b": 1800, "A": [1], "mu": [44.2], "sig": [0.1]},
+                            {"m": -500./3, "b": 1800, "A": [1], "mu": [51.7], "sig": [0.1]}],
+                        }
+
+def crystalFit(spec, crystal):
+    pass
+
 def __main__():
     # convertAll()
     data = getTxtFileArray("SPEC\\4D\\4D data files\\NaCl_2.txt", 0, True)
@@ -173,16 +192,16 @@ def __main__():
     spec.fitData(5.5, 8)
 
 def __plotDataExample__():
-    data = getTxtFileArray("SPEC\\4D\\4D data files\\NaCl_2.txt", 0, True)
+    data = getTxtFileArray("SPEC\\4D\\4D data files\\Si.txt", 0, True)
 
     spec = Spectrum.Spectrum(data)
 
-    spec.plotData(5.5, 8)
+    spec.plotData(50, 54)
 
 
 
-__main__()
-# __plotDataExample__()
+# __main__()
+__plotDataExample__()
 
 
 def __fitExample__():
