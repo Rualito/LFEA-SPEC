@@ -184,8 +184,14 @@ crystalFitParameters = {"NaCl": [
                             {"m": -500./3, "b": 1800, "A": [15], "mu": [31], "sig": [0.1]}]
                         }
 
-def crystalFit(spec, crystal):
-    pass
+def crystalFit(spec:Spectrum, xrange:list,crystal:str, index:int, fname:str):
+    specificPars = crystalFitParameters[crystal][index]
+    spec.setBaseLinePars(specificPars["m"],  specificPars["b"])
+
+    for i in range(len(specificPars["mu"])):
+        spec.addGaussianParameters(specificPars["A"], specificPars["mu"], specificPars["sig"])
+
+    spec.fitData(xrange[0], xrange[1], fname)
 
 def __main__():
     # convertAll()
