@@ -161,6 +161,7 @@ def printFileParameters(file):
 
     return "\t"+str(min0) + "\t" + str(max0) + "\t" + "%0.2f"%step
 
+
 crystalFitParameters = {"NaCl": [
                             {"m": -500./3, "b": 1800, "A": [200, 800], "mu": [6.4, 7.4], "sig": [0.1, 0.1]},
                             {"m": -500./3, "b": 1800, "A": [10, 20], "mu": [19.5, 22.2], "sig": [0.1, 0.1]},
@@ -171,10 +172,16 @@ crystalFitParameters = {"NaCl": [
                             {"m": -500./3, "b": 1800, "A": [1], "mu": [27], "sig": [0.1]},
                             {"m": -500./3, "b": 1800, "A": [1], "mu": [31], "sig": [0.1]}],
                         "Si": [
-                            {"m": -500./3, "b": 1800, "A": [20, 50], "mu": [13.3, 15], "sig": [0.2, 0.2]},
+                            {"m": -500./3, "b": 1800, "A": [200, 500], "mu": [8.8, 10], "sig": [0.2, 0.2]},
                             {"m": -500./3, "b": 1800, "A": [5, 5], "mu": [27.5, 31.2], "sig": [0.2, 0.2]},
                             {"m": -500./3, "b": 1800, "A": [1], "mu": [44.2], "sig": [0.1]},
                             {"m": -500./3, "b": 1800, "A": [1], "mu": [51.7], "sig": [0.1]}],
+                        "LiF": [
+                            {"m": -500./3, "b": 1800, "A": [200, 500], "mu": [13.3, 15], "sig": [0.2, 0.2]},
+                            {"m": -500./3, "b": 1800, "A": [30], "mu": [18.1], "sig": [0.2]},
+                            {"m": -500./3, "b": 1800, "A": [60], "mu": [20.5], "sig": [0.2]},
+                            {"m": -500./3, "b": 1800, "A": [5], "mu": [28], "sig": [0.1]},
+                            {"m": -500./3, "b": 1800, "A": [15], "mu": [31], "sig": [0.1]}]
                         }
 
 def crystalFit(spec, crystal):
@@ -189,14 +196,14 @@ def __main__():
     spec.addGaussianParameters(200, 6.4, 0.1)
     spec.addGaussianParameters(600, 7.2, 0.1)
 
-    spec.fitData(5.5, 8)
+    spec.fitData(17, 21)
 
 def __plotDataExample__():
-    data = getTxtFileArray("SPEC\\4D\\4D data files\\Si.txt", 0, True)
+    data = getTxtFileArray("SPEC\\4D\\4D data files\\LiF.txt", 0, True)
 
     spec = Spectrum.Spectrum(data)
 
-    spec.plotData(50, 54)
+    spec.plotData(25, 35)
 
 
 
