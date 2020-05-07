@@ -116,11 +116,11 @@ class Spectrum:
                 paramVal.append(float(pars.split()[0]))
                 paramErr.append(float(pars.split(" +/- ")[1].split()[0]))
 
-        print("chi2: ", chi2)
-        for i in range(len(paramStr)):
-            print(paramStr[i], paramVal[i], paramErr[i])
+        # print("chi2: ", chi2)
+        # for i in range(len(paramStr)):
+        #     print(paramStr[i], paramVal[i], paramErr[i])
 
-        return [paramStr, paramVal, paramErr]
+        return [chi2, paramStr, paramVal, paramErr]
 
     def plotData(self, xmin=0, xmax=0):
         gp.c("reset")
