@@ -66,12 +66,13 @@ def customizeGraph(type=""):
     if type == "log":
         gp.c("set logscale y")
 
+directory = "SPEC\\2D\\2D data files"
+
 def plotFile(filename: str, xmin=0, xmax=0, type=""):
     customizeGraph(type)
     Spectrum.Spectrum(getTxtFileArray(filename, 0, True)).plotData(xmin, xmax)
 
 
-directory = "SPEC\\2D\\2D data files"
 
 
 files = [join(directory, f) for f in listdir(directory)
@@ -111,5 +112,6 @@ def fitFile(fname, index=0):
         print(afterfitpars[1][i], "\t", afterfitpars[2][i], "\t", afterfitpars[3][i])
 
 
+plotFile("02-NaCl1-01-5s.txt")
 fitFile("02-NaCl1-01-5s.txt", 0)
 
