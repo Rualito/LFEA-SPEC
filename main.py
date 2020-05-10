@@ -111,5 +111,5 @@ def fitFile(fname, index=0):
         print(afterfitpars[1][i], "\t", afterfitpars[2][i], "\t", afterfitpars[3][i])
 
 
-fitFile("02-NaCl1-01-5s.txt")
+fitFile("02-NaCl1-01-5s.txt", 0)
 
