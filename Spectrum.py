@@ -2,6 +2,7 @@ import math
 import PyGnuplot as gp
 import time
 
+
 class Spectrum:
 
     mpar = 0
@@ -53,8 +54,7 @@ class Spectrum:
                 arrX.append(self.dataArray[0][i])
                 arrY.append(self.dataArray[1][i])
                 arrErrY.append(self.dataArray[2][i])
-        gp.c("reset")
-        gp.c("set grid")
+
         gp.s([arrX, arrY, arrErrY], "tmp.dat")
 
         gp.c("m=%f" % self.mpar)
@@ -74,14 +74,14 @@ class Spectrum:
                 viaStr += ", "
             gaussStr += "A%d/(sqrt(2*pi)*sig%d) * exp( -0.5*((x-mu%d)/sig%d)**2)"% (i, i, i, i)
             viaStr += "A%d, mu%d, sig%d" % (i, i, i)
-            paramNumber+=3
+            paramNumber += 3
 
         gp.c("ftot(x)="+gaussStr+"+m*x+b")
         gp.c("fit ftot(x) 'tmp.dat' u 1:2:3 yerrors via " + viaStr)
-        gp.c("plot 'tmp.dat' u 1:2:3 w yerrorbars t 'Data', ftot(x)")
 
+        gp.c("plot 'tmp.dat' u 1:2:3 w yerrorbars t 'Data', ftot(x) t 'f({/Symbol b})'")
         if len(filename) != 0:
-            gp.p(filename)
+            gp.pdf(filename)
 
         time.sleep(0.1)  # needed to create the fit.log file in time
         # then view file fit.log to get parameters
@@ -103,7 +103,6 @@ class Spectrum:
         paramErr = []
         for i in range(len(fileLines)):
             if "(reduced chisquare) = WSSR/ndf" in fileLines[i]:
-                print(fileLines[i].split(" : "))
                 chi2 = float(fileLines[i].split(" : ")[1])
 
             if "Final set of parameters" in fileLines[i]:
@@ -122,11 +121,13 @@ class Spectrum:
 
         return [chi2, paramStr, paramVal, paramErr]
 
-    def plotData(self, xmin=0, xmax=0):
-        gp.c("reset")
-        gp.c("set grid")
-        if not xmin==xmax==0:
+    def plotData(self, xmin=0, xmax=0, filename=''):
+
+        if not xmin == xmax == 0:
             gp.c("set xrange [%f:%f]" % (xmin, xmax))
 
         gp.s(self.dataArray, "plot.dat")
-        gp.c("plot 'plot.dat' u 1:2:3 w yerrorbars")
+        gp.c("plot 'plot.dat' u 1:2 w lp t 'Data'")
+
+        if  len(filename) >0:
+            gp.pdf(filename)
